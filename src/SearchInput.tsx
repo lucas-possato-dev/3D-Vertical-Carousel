@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SyntheticEvent, useRef } from "react";
+import { SyntheticEvent, useRef, useEffect } from "react";
 
 const API_KEY = "36587037-753038ed60e00b6df345da5d7";
 const SearchInput = (props: { setImageData: (data: string[]) => void }) => {
@@ -24,6 +24,22 @@ const SearchInput = (props: { setImageData: (data: string[]) => void }) => {
       }
     }, 600);
   };
+
+  useEffect(() => {
+    const initialInput = async () => {
+      const res = await axios.get("https://pixabay.com/api/", {
+        params: {
+          key: API_KEY,
+          q: "ocean",
+          image_type: "photo",
+          per_page: 18,
+          orientation: "horizontal",
+        },
+      });
+      props.setImageData(res.data.hits.map((it: any) => it.webformatURL));
+    };
+    initialInput();
+  }, []);
 
   return (
     <input
